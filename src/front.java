@@ -43,7 +43,7 @@ private void setup()
 // Setting Window Size initiating info
 this.setSize(windowW, windowH);
 pause(20);							// To make susre this pointer is changed for new dimensions 
-this.setBackground(Color.blue);
+this.setBackground(Color.GREEN);
 info=new GLabel("Game BreakOut");
 add(info);
 info.setFont("Serif-25");
@@ -54,7 +54,7 @@ info.setLocation(0,25);
 // Adding slab 
 slab = new G3DRect(this.getWidth()/6,this.getWidth()/80);	
 add(slab,25,getHeight()-2*slab.getHeight());
-slab.setFillColor(Color.black);
+slab.setFillColor(Color.blue);
 slab.setFilled(true);
 
 //Adding mouse listeners
