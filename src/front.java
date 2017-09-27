@@ -48,7 +48,12 @@ info=new GLabel("Game BreakOut");
 add(info);
 info.setFont("Serif-25");
 info.setLocation(0,25);
+info1=new GLabel("Game BreakOut");
+info1.setLabel("Your Pointer is OUT Please Come Back...");
+info1.setFont("Serif-50");
+info1.setLocation(200,getHeight()-300);
 
+bar=new GLine(0,getHeight()-250,getWidth(),getHeight()-250);
 
 
 // Adding slab 
@@ -99,9 +104,31 @@ add(ball,slab.getX()+slab.getWidth()/2,slab.getY()-ball.getHeight());
 
 public void mouseMoved(MouseEvent event)
 {
-// if is used sothat slab is never out of the window dimensions
-if(event.getX()>=0 && event.getX()<=getWidth()-slab.getWidth())
+// if is used so that slab is never out of the window dimensions
+
+if(event.getX()>=getWidth()-20 || event.getY()>=getHeight()-20 || event.getX()<=20 || event.getY()<=20)
+{
+gamePaused=true;
+	if(ball.getY() < getHeight()-250)
+	{
+	ball.setLocation(ball.getX(),420);
+	repaint();
+	}
+pause(50);
+add(info1);
+delay=50;
+add(bar);
+}
+else if(event.getX()>=0 && event.getX()<=getWidth()-slab.getWidth())
+{
+	remove(info1);
+	gamePaused=false;
+	repaint();
 	slab.setLocation(event.getX(),getHeight()-2*slab.getHeight());
+	delay=5;
+	remove(bar);
+	remove(info1);
+}
 }
 
 public void mouseClicked(MouseEvent event)
@@ -133,6 +160,8 @@ if(!gameOver)
 	{
 ball.move(dx,dy); // dx & dy were set to 1 in mouse clicked event
 info.setLabel("Remaining Bricks : "+brickCount);
+if(gamePaused==true)
+slab.setLocation(ball.getX()-slab.getWidth()/2,slab.getY());
 	}
 
 }// if ganme!over
@@ -303,7 +332,7 @@ point7Y=ball.getY()+ball.getHeight()-substrate+1;
 if(getElementAt(point12X,point12Y)!=null )
 {
 	obj=getElementAt(point12X,point12Y);
-	if(obj!=slab && obj!=info)
+	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
 	{
 		remove(getElementAt(point12X,point12Y));
 		brickCount--;
@@ -315,7 +344,7 @@ if(getElementAt(point12X,point12Y)!=null )
 if(getElementAt(point3X,point3Y)!=null)
 {
 	obj=getElementAt(point3X,point3Y);
-	if(obj!=slab && obj!=info)
+	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
 	{
 		remove(getElementAt(point3X,point3Y));
 		brickCount--;
@@ -326,7 +355,7 @@ if(getElementAt(point3X,point3Y)!=null)
 if(getElementAt(point6X,point6Y)!=null)
 {
 	obj=getElementAt(point6X,point6Y);
-	if(obj!=slab && obj!=info)
+	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
 	{
 		remove(getElementAt(point6X,point6Y));
 		brickCount--;
@@ -337,7 +366,7 @@ if(getElementAt(point6X,point6Y)!=null)
 if(getElementAt(point9X,point9Y)!=null)
 {
 	obj=getElementAt(point9X,point9Y);
-	if(obj!=slab && obj!=info)
+	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
 	{
 		remove(getElementAt(point9X,point9Y));
 		brickCount--;
@@ -348,7 +377,7 @@ if(getElementAt(point9X,point9Y)!=null)
 if(getElementAt(point1X,point1Y)!=null)
 {
 	obj=getElementAt(point1X,point1Y);
-	if(obj!=slab && obj!=info)
+	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
 	{
 		remove(getElementAt(point1X,point1Y));
 		brickCount--;
@@ -359,7 +388,7 @@ if(getElementAt(point1X,point1Y)!=null)
 if(getElementAt(point4X,point4Y)!=null)
 {
 	obj=getElementAt(point4X,point4Y);
-	if(obj!=slab && obj!=info)
+	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
 	{
 		remove(getElementAt(point4X,point4Y));
 		brickCount--;
@@ -370,7 +399,7 @@ if(getElementAt(point4X,point4Y)!=null)
 if(getElementAt(point7X,point7Y)!=null)
 {
 	obj=getElementAt(point7X,point7Y);
-	if(obj!=slab && obj!=info)
+	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
 	{
 		remove(getElementAt(point7X,point7Y));
 		brickCount--;
@@ -381,7 +410,7 @@ if(getElementAt(point7X,point7Y)!=null)
 if(getElementAt(point10X,point10Y)!=null)
 {
 	obj=getElementAt(point10X,point10Y);
-	if(obj!=slab && obj!=info)
+	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
 	{
 		remove(getElementAt(point10X,point10Y));
 		brickCount--;
@@ -429,17 +458,17 @@ private void postwin()
 	brick count is used to check if the game is finshed or not 
 	it is used in finish method and also in move method to display remaining bricks	*/
 	
-	int brickCount=0,delay=4;
-	boolean gameOver=false,fly=false;
+	int brickCount=0,delay=5;
+	boolean gameOver=false,fly=false,gamePaused=false;
 	
 	/*fly is initaly set to false hat means ball is not flying as the user clicks mouse button
 	fly is set to true and also dx & dy are set to 1 Object obj is used in facecheck method in collision method
 	to check if the curent object is brick or not*/
 	
 	GObject obj;
-	GLabel info;
+	GLabel info,info1;
 	RandomGenerator temp;//For random color
-	
+	GLine bar;
 	// End Declaration	
 }//Class Front Ends
 
