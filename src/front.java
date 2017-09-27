@@ -25,6 +25,7 @@ public void run()
 while(!gameOver)
 {
 moveBall();
+checkPause();
 faceobject();
 collision();
 if(finish()==1)
@@ -105,29 +106,19 @@ add(ball,slab.getX()+slab.getWidth()/2,slab.getY()-ball.getHeight());
 public void mouseMoved(MouseEvent event)
 {
 // if is used so that slab is never out of the window dimensions
+this.event=event;
 
-if(event.getY()>=getHeight()-20 || event.getY()<=20)
+if (event.getY()<getHeight()-20 && event.getY()>20)
 {
-gamePaused=true;
-	if(ball.getY() < getHeight()-250)
-	{
-	ball.setLocation(ball.getX(),420);
-	repaint();
-	}
-pause(50);
-add(info1);
-delay=50;
-add(bar);
+gamePaused=false;
+remove(info1);
+remove (bar);
+delay=5;
 }
-else if(event.getX()>=0 && event.getX()<=getWidth()-slab.getWidth())
+
+if(event.getX()>=0 && event.getX()<=getWidth()-slab.getWidth() && gamePaused==false)
 {
-	remove(info1);
-	gamePaused=false;
-	repaint();
-	slab.setLocation(event.getX(),getHeight()-2*slab.getHeight());
-	delay=5;
-	remove(bar);
-	remove(info1);
+	slab.setLocation(event.getX(),getHeight()-2*slab.getHeight());	
 }
 }
 
@@ -158,6 +149,7 @@ if(!gameOver)
 }
 	else
 	{
+
 ball.move(dx,dy); // dx & dy were set to 1 in mouse clicked event
 info.setLabel("Remaining Bricks : "+brickCount);
 	}
@@ -166,6 +158,28 @@ info.setLabel("Remaining Bricks : "+brickCount);
 }//move method ends
 
 //Checks collision with walls only
+
+
+private void checkPause()
+{
+	
+	if( (event.getY()>=getHeight()-20 || event.getY()<=20) && ball.getY() > getHeight()-245)
+	{
+	gamePaused=true;
+		/*if(ball.getY() < getHeight()-250)
+		{
+		ball.setLocation(ball.getX(),420);
+		repaint();
+		}*/
+	add(info1);
+	delay=80;
+	add(bar);
+	}
+	
+
+}
+
+
 private void collision()
 {
 if(leftwall() || rightwall())
@@ -467,6 +481,7 @@ private void postwin()
 	GLabel info,info1;
 	RandomGenerator temp;//For random color
 	GLine bar;
+	MouseEvent event;
 	// End Declaration	
 }//Class Front Ends
 
