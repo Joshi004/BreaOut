@@ -160,8 +160,6 @@ if(!gameOver)
 	{
 ball.move(dx,dy); // dx & dy were set to 1 in mouse clicked event
 info.setLabel("Remaining Bricks : "+brickCount);
-if(gamePaused==true)
-slab.setLocation(ball.getX()-slab.getWidth()/2,slab.getY());
 	}
 
 }// if ganme!over
