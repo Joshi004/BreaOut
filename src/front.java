@@ -48,26 +48,38 @@ this.setBackground(Color.GREEN);
 info=new GLabel("Game BreakOut");
 add(info);
 info.setFont("Serif-25");
-info.setLocation(0,25);
+info.setLocation(0,upMargin-info.getDescent());
 info1=new GLabel("Game BreakOut");
 info1.setLabel("Your Pointer is OUT Please Come Back...");
 info1.setFont("Serif-50");
-info1.setLocation(200,getHeight()-300);
+info1.setLocation(0,upMargin-info1.getDescent());
 
 bar=new GLine(0,getHeight()-250,getWidth(),getHeight()-250);
 
 
 // Adding slab 
 slab = new G3DRect(this.getWidth()/6,this.getWidth()/80);	
-add(slab,25,getHeight()-2*slab.getHeight());
+add(slab,25,getHeight()-downMargin);
 slab.setFillColor(Color.blue);
 slab.setFilled(true);
+
+addBricks();
 
 //Adding mouse listeners
 addMouseListeners();
 
+// Setting up ball
+ball=new GOval(brickH,brickH);
+ball.setFilled(true);
+ball.setFillColor(Color.red);
+add(ball,slab.getX()+slab.getWidth()/2,slab.getY()-ball.getHeight());
+}//Setup method ends
+
+public int addBricks()
+{
+
 /*
- Seting brick dimensions ad numbers 16 signifies tat horizontaly 16 bricks can be placed
+ Seting brick dimensions ad numbers 16 signifies that horizontaly 16 bricks can be placed
 24 is used so that only half of the screen height is used for bricks 
 that is if height is height/24 implies if number of vertical bricks is 12 height/24*12 =1/2 of total height 
 how ever these numbers of bricks can be changed according to the values of i & j in the following loop 
@@ -77,8 +89,8 @@ brickW=getWidth()/16;
 brickH=getHeight()/24;
 //initial brick count is 0 which i increased as evry brick is added
 brickCount=0;
-int x=0,y=50;
-for(int i=0;i<10;i++)
+int x=0,y=upMargin;
+for(int i=0;i<12;i++)
 {
 	for(int j=0;j<16;j++)
 	{	
@@ -96,19 +108,16 @@ x+=brickW;
 	y+=brickH;
 }
 
-// Setting up ball
-ball=new GOval(brickH,brickH);
-ball.setFilled(true);
-ball.setFillColor(Color.red);
-add(ball,slab.getX()+slab.getWidth()/2,slab.getY()-ball.getHeight());
-}//Setup method ends
+	return 0;
+}
+
 
 public void mouseMoved(MouseEvent event)
 {
 // if is used so that slab is never out of the window dimensions
 this.event=event;
 
-if (event.getY()<getHeight()-20 && event.getY()>20)
+if (event.getY()<getHeight()-20 && event.getY()>20 && gamePaused==true)
 {
 gamePaused=false;
 remove(info1);
@@ -124,18 +133,13 @@ if(event.getX()>=0 && event.getX()<=getWidth()-slab.getWidth() && gamePaused==fa
 
 public void mouseClicked(MouseEvent event)
 {
-if(fly==false)
+if(!fly && !gameOver)
 {
 	//Now ball will fly
 	fly=true;
 	dx=1;	
 	dy=1;	
-}
-if(gameOver)
-	{
-	removeAll();
-	}
-}
+}}
 
 private void moveBall()
 {
@@ -144,14 +148,15 @@ if(!gameOver)
 	if(!fly)
 {
 // if ball is not flying ball should stick to th slab
+
 		ball.setLocation(slab.getX()+slab.getWidth()/2,slab.getY()-ball.getHeight());	
-		info.setLabel("Click And Move To start the game");
+		info.setLabel("Click Anywhere to start");
 }
 	else
 	{
 
 ball.move(dx,dy); // dx & dy were set to 1 in mouse clicked event
-info.setLabel("Remaining Bricks : "+brickCount);
+info.setLabel("Remaining Bricks : "+brickCount+"   Pointer Position"+ event.getXOnScreen()+" , "+event.getY() );
 	}
 
 }// if ganme!over
@@ -162,20 +167,16 @@ info.setLabel("Remaining Bricks : "+brickCount);
 
 private void checkPause()
 {
-	
-	if( (event.getY()>=getHeight()-20 || event.getY()<=20) && ball.getY() > getHeight()-245)
+	if(fly)
 	{
-	gamePaused=true;
-		/*if(ball.getY() < getHeight()-250)
+		if( (event.getY()>=slab.getY() + slab.getHeight() || event.getY() <= info.getY()+info.getDescent()) && ball.getY() > getHeight()-245 )
 		{
-		ball.setLocation(ball.getX(),420);
-		repaint();
-		}*/
-	add(info1);
-	delay=80;
-	add(bar);
+			gamePaused=true;
+			add(info1);
+			delay=80;
+			add(bar);
+		}
 	}
-	
 
 }
 
@@ -470,7 +471,10 @@ private void postwin()
 	brick count is used to check if the game is finshed or not 
 	it is used in finish method and also in move method to display remaining bricks	*/
 	
-	int brickCount=0,delay=5;
+	int brickCount=0;
+	double delay=5,tbh,tbw;
+	int upMargin=windowH/8;
+	int downMargin=windowH/8;
 	boolean gameOver=false,fly=false,gamePaused=false;
 	
 	/*fly is initaly set to false hat means ball is not flying as the user clicks mouse button
