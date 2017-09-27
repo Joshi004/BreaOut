@@ -106,7 +106,7 @@ public void mouseMoved(MouseEvent event)
 {
 // if is used so that slab is never out of the window dimensions
 
-if(event.getX()>=getWidth()-20 || event.getY()>=getHeight()-20 || event.getX()<=20 || event.getY()<=20)
+if(event.getY()>=getHeight()-20 || event.getY()<=20)
 {
 gamePaused=true;
 	if(ball.getY() < getHeight()-250)
