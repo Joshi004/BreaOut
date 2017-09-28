@@ -52,7 +52,7 @@ info.setLocation(0,upMargin-info.getDescent());
 info1=new GLabel("Game BreakOut");
 info1.setLabel("Your Pointer is OUT Please Come Back...");
 info1.setFont("Serif-50");
-info1.setLocation(0,upMargin-info1.getDescent());
+info1.setLocation(0,upMargin-info.getHeight());
 
 bar=new GLine(0,getHeight()-250,getWidth(),getHeight()-250);
 
@@ -84,13 +84,17 @@ public int addBricks()
 that is if height is height/24 implies if number of vertical bricks is 12 height/24*12 =1/2 of total height 
 how ever these numbers of bricks can be changed according to the values of i & j in the following loop 
 */
+
+topBar=new GLine(0,upMargin,getWidth(),upMargin);
+add(topBar);
+topBar.setColor(Color.LIGHT_GRAY);
 temp=RandomGenerator.getInstance();// For random colour 
 brickW=getWidth()/16;
 brickH=getHeight()/24;
 //initial brick count is 0 which i increased as evry brick is added
 brickCount=0;
 int x=0,y=upMargin;
-for(int i=0;i<12;i++)
+for(int i=0;i<2;i++)
 {
 	for(int j=0;j<16;j++)
 	{	
@@ -107,7 +111,7 @@ x+=brickW;
 	x=0;
 	y+=brickH;
 }
-
+bar.setLocation(0,y);
 	return 0;
 }
 
@@ -117,7 +121,7 @@ public void mouseMoved(MouseEvent event)
 // if is used so that slab is never out of the window dimensions
 this.event=event;
 
-if (event.getY()<getHeight()-20 && event.getY()>20 && gamePaused==true)
+if (event.getY()<slab.getY()+slab.getHeight() && event.getY()>info.getY()+info.getDescent() && gamePaused==true)
 {
 gamePaused=false;
 remove(info1);
@@ -169,7 +173,7 @@ private void checkPause()
 {
 	if(fly)
 	{
-		if( (event.getY()>=slab.getY() + slab.getHeight() || event.getY() <= info.getY()+info.getDescent()) && ball.getY() > getHeight()-245 )
+		if( (event.getY()>=slab.getY() + slab.getHeight() || event.getY() <= info.getY()+info.getDescent()) && ball.getY() > bar.getY() )
 		{
 			gamePaused=true;
 			add(info1);
@@ -345,7 +349,7 @@ point7Y=ball.getY()+ball.getHeight()-substrate+1;
 if(getElementAt(point12X,point12Y)!=null )
 {
 	obj=getElementAt(point12X,point12Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
+	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
 	{
 		remove(getElementAt(point12X,point12Y));
 		brickCount--;
@@ -357,7 +361,7 @@ if(getElementAt(point12X,point12Y)!=null )
 if(getElementAt(point3X,point3Y)!=null)
 {
 	obj=getElementAt(point3X,point3Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
+	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
 	{
 		remove(getElementAt(point3X,point3Y));
 		brickCount--;
@@ -368,7 +372,7 @@ if(getElementAt(point3X,point3Y)!=null)
 if(getElementAt(point6X,point6Y)!=null)
 {
 	obj=getElementAt(point6X,point6Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
+	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
 	{
 		remove(getElementAt(point6X,point6Y));
 		brickCount--;
@@ -379,7 +383,7 @@ if(getElementAt(point6X,point6Y)!=null)
 if(getElementAt(point9X,point9Y)!=null)
 {
 	obj=getElementAt(point9X,point9Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
+	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
 	{
 		remove(getElementAt(point9X,point9Y));
 		brickCount--;
@@ -390,7 +394,7 @@ if(getElementAt(point9X,point9Y)!=null)
 if(getElementAt(point1X,point1Y)!=null)
 {
 	obj=getElementAt(point1X,point1Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
+	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
 	{
 		remove(getElementAt(point1X,point1Y));
 		brickCount--;
@@ -401,7 +405,7 @@ if(getElementAt(point1X,point1Y)!=null)
 if(getElementAt(point4X,point4Y)!=null)
 {
 	obj=getElementAt(point4X,point4Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
+	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
 	{
 		remove(getElementAt(point4X,point4Y));
 		brickCount--;
@@ -412,7 +416,7 @@ if(getElementAt(point4X,point4Y)!=null)
 if(getElementAt(point7X,point7Y)!=null)
 {
 	obj=getElementAt(point7X,point7Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
+	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
 	{
 		remove(getElementAt(point7X,point7Y));
 		brickCount--;
@@ -423,7 +427,7 @@ if(getElementAt(point7X,point7Y)!=null)
 if(getElementAt(point10X,point10Y)!=null)
 {
 	obj=getElementAt(point10X,point10Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj!=bar)
+	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
 	{
 		remove(getElementAt(point10X,point10Y));
 		brickCount--;
@@ -462,7 +466,7 @@ private void postwin()
 //Declaration of class variables
 	GRect brick,slab;    					
 	GOval ball;
-	int windowW=1400,windowH=650,brickH,brickW,dx=0,dy=0;
+	int windowW=1400,windowH=660,brickH,brickW,dx=0,dy=0;
 	
 	/*Window height and width are initiated as above
 	brick height and brick width are defined in setup method
@@ -484,7 +488,7 @@ private void postwin()
 	GObject obj;
 	GLabel info,info1;
 	RandomGenerator temp;//For random color
-	GLine bar;
+	GLine bar,topBar;
 	MouseEvent event;
 	// End Declaration	
 }//Class Front Ends
