@@ -7,13 +7,44 @@ import java.awt.*;
 public class Bricks extends GCompound
 {
 	RandomGenerator temp;//For random color
-	int x=0,y,brickCount,BRow;
-	int brickR=12,brickC=16;
+	int brickR,brickC;
+	int x,y,brickCount,BRow;
 	GRect brick;
 
-public Bricks(double brickW,double brickH)
+public Bricks(double brickW,double brickH,int level)
 {
 	temp=RandomGenerator.getInstance();// For random colour
+
+	
+switch (level)
+{
+case 1:
+	brickR=10;
+	brickC=16;
+	
+	for(int i=0;i<brickR;i++)
+	{
+		for(int j=0;j<brickC;j++)
+		{	
+			brick=new GRect(brickW,brickH);
+			brick.setFilled(true);
+			brick.setFillColor(temp.nextColor());
+			if(j%2==0)
+			{
+			add(brick,x,y);
+			brickCount++;
+			}
+		x+=brickW;
+		}
+	x=0;
+	y+=brickH;
+	}	
+break;//case 1 ends
+
+case 2:
+	brickR=10;
+	brickC=16;
+	
 	for(int i=0;i<brickR;i++)
 	{
 		for(int j=0;j<brickC;j++)
@@ -23,15 +54,22 @@ public Bricks(double brickW,double brickH)
 			brick.setFillColor(temp.nextColor());
 			if(i%2==0)
 			{
-				add(brick,x,y);
+			add(brick,x,y);
 			brickCount++;
 			}
-	x+=brickW;
+		x+=brickW;
 		}
-		x=0;
-		y+=brickH;
+	x=0;
+	y+=brickH;
+	}	
+break;//case 1 ends
+
+
+
+}// Case scope ends
+	
+	
 	}
-}
 
 public int getCount()
 {

@@ -21,6 +21,7 @@ public class front extends GraphicsProgram
 {	
 public void run()
 {
+
 setup();
 while(!gameOver)
 {
@@ -28,15 +29,17 @@ moveBall();
 checkPause();
 faceobject();
 collision();
-if(finish()==1)
-break;
 pause(delay);	
-}// Game is Finshed or over 
-
 if(brickCount==0)
 {
-postwin();
-}	
+	fly=false;
+	level++;
+	removeAll();
+	setup();
+}
+}// Game is Finshed or over 
+
+	
 }//Run Ends	
 
 private void setup()
@@ -45,10 +48,12 @@ private void setup()
 this.setSize(windowW, windowH);
 pause(20);							// To make susre this pointer is changed for new dimensions 
 this.setBackground(Color.GREEN);
+
 info=new GLabel("Game BreakOut");
 add(info);
 info.setFont("Serif-25");
 info.setLocation(0,upMargin-info.getDescent());
+
 info1=new GLabel("Game BreakOut");
 info1.setLabel("Your Pointer is OUT Please Come Back...");
 info1.setFont("Serif-50");
@@ -63,19 +68,24 @@ add(slab,25,getHeight()-downMargin);
 slab.setFillColor(Color.blue);
 slab.setFilled(true);
 
-addBricks();
+
 
 //Adding mouse listeners
 addMouseListeners();
 
 // Setting up ball
-ball=new GOval(brickH,brickH);
+ball=new GOval(getHeight()/24,getHeight()/24);
 ball.setFilled(true);
 ball.setFillColor(Color.red);
 add(ball,slab.getX()+slab.getWidth()/2,slab.getY()-ball.getHeight());
+
+topBar=new GLine(0,upMargin,getWidth(),upMargin);
+add(topBar);
+topBar.setColor(Color.LIGHT_GRAY);
+addBricks();
 }//Setup method ends
 
-public int addBricks()
+private void addBricks()
 {
 
 /*
@@ -85,21 +95,17 @@ that is if height is height/24 implies if number of vertical bricks is 12 height
 how ever these numbers of bricks can be changed according to the values of i & j in the following loop 
 */
 
-topBar=new GLine(0,upMargin,getWidth(),upMargin);
-add(topBar);
-topBar.setColor(Color.LIGHT_GRAY);
-
 brickW=getWidth()/16;
 brickH=getHeight()/24;
 //initial brick count is 0 which i increased as evry brick is added
-brickCount=0;
-int x=0,y=upMargin;
-
-pile = new Bricks(brickW,brickH);
-add(pile,0,upMargin);
+int y=upMargin; // Pile starts from this vertical height
+pile = new Bricks(brickW,brickH,level);
+add(pile);
+pile.setLocation(0,y);
+pile.setVisible(true);
 brickCount=pile.getCount();
 bar.setLocation(0,y+pile.getextentY());
-	return 0;
+//	return 0;
 }
 
 
@@ -168,15 +174,9 @@ private void checkPause()
 			add(bar);
 		}
 	}
-if(windowH-getHeight() !=0 || windowW-getWidth()!=0)
-{
-removeAll();
-windowH=getHeight();
-windowW=getWidth();
-setup();
-}
 
-}
+}// method check pause over
+
 
 
 private void collision()
@@ -460,7 +460,7 @@ private void postwin()
 //Declaration of class variables
 	GRect brick,slab;    					
 	GOval ball;
-	int windowW=1400,windowH=660;
+	int windowW=1400,windowH=660,iww,iwh;
 	double brickH,brickW,dx=0,dy=0;
 	
 	/*Window height and width are initiated as above
