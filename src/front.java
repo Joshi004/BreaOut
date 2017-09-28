@@ -21,7 +21,7 @@ public class front extends GraphicsProgram
 {	
 public void run()
 {
-	setup();
+setup();
 while(!gameOver)
 {
 moveBall();
@@ -88,30 +88,17 @@ how ever these numbers of bricks can be changed according to the values of i & j
 topBar=new GLine(0,upMargin,getWidth(),upMargin);
 add(topBar);
 topBar.setColor(Color.LIGHT_GRAY);
-temp=RandomGenerator.getInstance();// For random colour 
+
 brickW=getWidth()/16;
 brickH=getHeight()/24;
 //initial brick count is 0 which i increased as evry brick is added
 brickCount=0;
 int x=0,y=upMargin;
-for(int i=0;i<2;i++)
-{
-	for(int j=0;j<16;j++)
-	{	
-		brick=new GRect(brickW,brickH);
-		brick.setFilled(true);
-		brick.setFillColor(temp.nextColor());
-		if(i%2==0)
-		{
-			add(brick,x,y);
-		brickCount++;
-		}
-x+=brickW;
-	}
-	x=0;
-	y+=brickH;
-}
-bar.setLocation(0,y);
+
+pile = new Bricks(brickW,brickH);
+add(pile,0,upMargin);
+brickCount=pile.getCount();
+bar.setLocation(0,y+pile.getextentY());
 	return 0;
 }
 
@@ -173,14 +160,21 @@ private void checkPause()
 {
 	if(fly)
 	{
-		if( (event.getY()>=slab.getY() + slab.getHeight() || event.getY() <= info.getY()+info.getDescent()) && ball.getY() > bar.getY() )
+		if( (event.getY()>=slab.getY() + slab.getHeight() || event.getY() <= info.getY()+info.getDescent()) && ball.getY() > bar.getY()+2)// 2 is for margin of safety as it may cling to th bar otherwise
 		{
 			gamePaused=true;
 			add(info1);
-			delay=80;
+			delay=100;
 			add(bar);
 		}
 	}
+if(windowH-getHeight() !=0 || windowW-getWidth()!=0)
+{
+removeAll();
+windowH=getHeight();
+windowW=getWidth();
+setup();
+}
 
 }
 
@@ -349,9 +343,9 @@ point7Y=ball.getY()+ball.getHeight()-substrate+1;
 if(getElementAt(point12X,point12Y)!=null )
 {
 	obj=getElementAt(point12X,point12Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
+	if(obj==pile)
 	{
-		remove(getElementAt(point12X,point12Y));
+		pile.rmv(point12X,point12Y-upMargin);
 		brickCount--;
 	}
 	
@@ -361,9 +355,9 @@ if(getElementAt(point12X,point12Y)!=null )
 if(getElementAt(point3X,point3Y)!=null)
 {
 	obj=getElementAt(point3X,point3Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
+	if(obj==pile)
 	{
-		remove(getElementAt(point3X,point3Y));
+		pile.rmv(point3X,point3Y-upMargin);
 		brickCount--;
 	}
 		return 3;
@@ -372,9 +366,9 @@ if(getElementAt(point3X,point3Y)!=null)
 if(getElementAt(point6X,point6Y)!=null)
 {
 	obj=getElementAt(point6X,point6Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
+	if(obj==pile)
 	{
-		remove(getElementAt(point6X,point6Y));
+		pile.rmv(point6X,point6Y-upMargin);
 		brickCount--;
 	}
 		return 6;
@@ -383,9 +377,9 @@ if(getElementAt(point6X,point6Y)!=null)
 if(getElementAt(point9X,point9Y)!=null)
 {
 	obj=getElementAt(point9X,point9Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
+	if(obj==pile)
 	{
-		remove(getElementAt(point9X,point9Y));
+		pile.rmv(point9X,point9Y-upMargin);
 		brickCount--;
 	}
 		return 9;
@@ -394,9 +388,9 @@ if(getElementAt(point9X,point9Y)!=null)
 if(getElementAt(point1X,point1Y)!=null)
 {
 	obj=getElementAt(point1X,point1Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
+	if(obj==pile)
 	{
-		remove(getElementAt(point1X,point1Y));
+		pile.rmv(point1X,point1Y-upMargin);
 		brickCount--;
 	}
 		return 1;
@@ -405,9 +399,9 @@ if(getElementAt(point1X,point1Y)!=null)
 if(getElementAt(point4X,point4Y)!=null)
 {
 	obj=getElementAt(point4X,point4Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
+	if(obj==pile)
 	{
-		remove(getElementAt(point4X,point4Y));
+		pile.rmv(point4X,point4Y-upMargin);
 		brickCount--;
 	}
 		return 4;
@@ -416,9 +410,9 @@ if(getElementAt(point4X,point4Y)!=null)
 if(getElementAt(point7X,point7Y)!=null)
 {
 	obj=getElementAt(point7X,point7Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
+	if(obj==pile)
 	{
-		remove(getElementAt(point7X,point7Y));
+		pile.rmv(point7X,point7Y-upMargin);
 		brickCount--;
 	}
 		return 7;
@@ -427,9 +421,9 @@ if(getElementAt(point7X,point7Y)!=null)
 if(getElementAt(point10X,point10Y)!=null)
 {
 	obj=getElementAt(point10X,point10Y);
-	if(obj!=slab && obj!=info && obj!=info1 && obj !=bar && obj != topBar)
+	if(obj==pile)
 	{
-		remove(getElementAt(point10X,point10Y));
+		pile.rmv(point10X,point10Y-upMargin);
 		brickCount--;
 	}
 		return 10;
@@ -466,7 +460,8 @@ private void postwin()
 //Declaration of class variables
 	GRect brick,slab;    					
 	GOval ball;
-	int windowW=1400,windowH=660,brickH,brickW,dx=0,dy=0;
+	int windowW=1400,windowH=660;
+	double brickH,brickW,dx=0,dy=0;
 	
 	/*Window height and width are initiated as above
 	brick height and brick width are defined in setup method
@@ -475,8 +470,8 @@ private void postwin()
 	brick count is used to check if the game is finshed or not 
 	it is used in finish method and also in move method to display remaining bricks	*/
 	
-	int brickCount=0;
-	double delay=5,tbh,tbw;
+	int brickCount=0,level=1;
+	double delay=5,tbh,tbw;//tbh and tbw are not ised yet probbably use for total brick height and width
 	int upMargin=windowH/8;
 	int downMargin=windowH/8;
 	boolean gameOver=false,fly=false,gamePaused=false;
@@ -484,10 +479,9 @@ private void postwin()
 	/*fly is initaly set to false hat means ball is not flying as the user clicks mouse button
 	fly is set to true and also dx & dy are set to 1 Object obj is used in facecheck method in collision method
 	to check if the curent object is brick or not*/
-	
+	Bricks pile;
 	GObject obj;
 	GLabel info,info1;
-	RandomGenerator temp;//For random color
 	GLine bar,topBar;
 	MouseEvent event;
 	// End Declaration	
