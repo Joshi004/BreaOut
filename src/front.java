@@ -25,7 +25,7 @@ public void run()
 setup();
 while(!gameOver)
 {
-moveBall();
+moveComponents();
 checkPause();
 faceobject();
 collision();
@@ -138,7 +138,7 @@ if(!fly && !gameOver)
 	dy=1;	
 }}
 
-private void moveBall()
+private void moveComponents()
 {
 if(!gameOver)
 {
@@ -151,9 +151,21 @@ if(!gameOver)
 }
 	else
 	{
-
+//Code to move ball
 ball.move(dx,dy); // dx & dy were set to 1 in mouse clicked event
 info.setLabel("Remaining Bricks : "+brickCount+"   Pointer Position"+ event.getXOnScreen()+" , "+event.getY() );
+
+// Code To move Power
+	if(power!=null)
+	{
+		power.move(0, 1);
+			if(power.getY()>slab.getY())
+			{
+			remove(power);
+			power=null;
+			}
+			}
+
 	}
 
 }// if ganme!over
@@ -161,6 +173,7 @@ info.setLabel("Remaining Bricks : "+brickCount+"   Pointer Position"+ event.getX
 
 //Checks collision with walls only
 
+// Checks if game is in pause condition that is if pointer is out
 
 private void checkPause()
 {
@@ -176,8 +189,6 @@ private void checkPause()
 	}
 
 }// method check pause over
-
-
 
 private void collision()
 {
@@ -202,7 +213,6 @@ if(bottom())
 }
 } // Collision Check end
 
-
 private boolean leftwall()
 {
 	if(ball.getX()<=0)
@@ -215,7 +225,6 @@ if(ball.getX()+ball.getWidth()>=getWidth())
 	return true;
 	return false;	
 }
-
 private boolean topwall()
 {
 if(ball.getY()<=0)
@@ -235,9 +244,13 @@ as 12 is top 6 bottom and 7 is actualy 7.5 and 4 = 4.5
 Case 6 is treated differently for the case when ball strikes the slab 
 slab is decided into 5 section with diffrent throwing angles or values of dx*/
 
+// Contains 12 cases in which ball can colide with object with dircetion reversal code as per required
 private void faceobject()
 {
-int point = getPoint();
+
+	int point = getPoint();
+
+	
 
 switch (point)
 {
@@ -295,8 +308,25 @@ switch (point)
 		dy=-dy;
 		break;
 }// Swith scope ends	
-
+point=0;
 }//check fase ends
+
+public int emitPower()
+{
+random=RandomGenerator.getInstance();
+int num=random.nextInt(100);
+
+if(num>10)
+{
+power = new GRect(50,50);
+power.setColor(Color.YELLOW);
+add(power,ball.getX(),ball.getY());
+//powerPresent=true;
+}
+
+
+	return 1;	
+}
 
 /*Prsense of any object is check at these provided 8 points on the ball as the extreme corners 
 at each point 1 is ades or subtracted to elivate the checkd point from the ball itself 
@@ -308,6 +338,7 @@ sustrate can be eaisly calculate using pythagoras theoram
 and geometry 
 
 *At every removal ball count is reduced */
+
 private int getPoint()
 {
 double point12X,point1X,point3X,point4X,point6X,point7X,point9X,point10X;
@@ -343,12 +374,17 @@ point7Y=ball.getY()+ball.getHeight()-substrate+1;
 if(getElementAt(point12X,point12Y)!=null )
 {
 	obj=getElementAt(point12X,point12Y);
+	
+	
 	if(obj==pile)
 	{
 		pile.rmv(point12X,point12Y-upMargin);
 		brickCount--;
+		if(power==null)
+			emitPower();
+
 	}
-	
+	if(obj!=power)
 		return 12;
 }
 
@@ -359,8 +395,11 @@ if(getElementAt(point3X,point3Y)!=null)
 	{
 		pile.rmv(point3X,point3Y-upMargin);
 		brickCount--;
+		if(power==null)
+			emitPower();
 	}
-		return 3;
+	if(obj!=power)	
+	return 3;
 }
 
 if(getElementAt(point6X,point6Y)!=null)
@@ -370,8 +409,11 @@ if(getElementAt(point6X,point6Y)!=null)
 	{
 		pile.rmv(point6X,point6Y-upMargin);
 		brickCount--;
+		if(power==null)
+			emitPower();
 	}
-		return 6;
+	if(obj!=power)	
+	return 6;
 }
 
 if(getElementAt(point9X,point9Y)!=null)
@@ -381,8 +423,11 @@ if(getElementAt(point9X,point9Y)!=null)
 	{
 		pile.rmv(point9X,point9Y-upMargin);
 		brickCount--;
+		if(power==null)
+			emitPower();
 	}
-		return 9;
+	if(obj!=power)	
+	return 9;
 }
 
 if(getElementAt(point1X,point1Y)!=null)
@@ -392,8 +437,11 @@ if(getElementAt(point1X,point1Y)!=null)
 	{
 		pile.rmv(point1X,point1Y-upMargin);
 		brickCount--;
+		if(power==null)
+			emitPower();
 	}
-		return 1;
+	if(obj!=power)	
+	return 1;
 }
 
 if(getElementAt(point4X,point4Y)!=null)
@@ -403,8 +451,11 @@ if(getElementAt(point4X,point4Y)!=null)
 	{
 		pile.rmv(point4X,point4Y-upMargin);
 		brickCount--;
+		if(power==null)
+			emitPower();
 	}
-		return 4;
+	if(obj!=power)	
+	return 4;
 }
 
 if(getElementAt(point7X,point7Y)!=null)
@@ -414,8 +465,11 @@ if(getElementAt(point7X,point7Y)!=null)
 	{
 		pile.rmv(point7X,point7Y-upMargin);
 		brickCount--;
+		if(power==null)
+			emitPower();
 	}
-		return 7;
+	if(obj!=power)	
+	return 7;
 }
 
 if(getElementAt(point10X,point10Y)!=null)
@@ -425,8 +479,11 @@ if(getElementAt(point10X,point10Y)!=null)
 	{
 		pile.rmv(point10X,point10Y-upMargin);
 		brickCount--;
+		if(power==null)
+			emitPower();
 	}
-		return 10;
+	if(obj!=power)	
+	return 10;
 }
 
 
@@ -474,13 +531,13 @@ private void postwin()
 	double delay=5,tbh,tbw;//tbh and tbw are not ised yet probbably use for total brick height and width
 	int upMargin=windowH/8;
 	int downMargin=windowH/8;
-	boolean gameOver=false,fly=false,gamePaused=false;
-	
+	boolean gameOver=false,fly=false,gamePaused=false,powerPresent=false;
+	RandomGenerator random;
 	/*fly is initaly set to false hat means ball is not flying as the user clicks mouse button
 	fly is set to true and also dx & dy are set to 1 Object obj is used in facecheck method in collision method
 	to check if the curent object is brick or not*/
 	Bricks pile;
-	GObject obj;
+	GObject obj,power=null;
 	GLabel info,info1;
 	GLine bar,topBar;
 	MouseEvent event;
