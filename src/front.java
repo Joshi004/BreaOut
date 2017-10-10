@@ -158,10 +158,12 @@ info.setLabel("Remaining Bricks : "+brickCount+"   Pointer Position"+ event.getX
 // Code To move Power
 	if(power!=null)
 	{
-		power.move(0, 1);
-			if(power.getY()>slab.getY())
+		power.move(0, .5);
+			
+			if(power.getY()>slab.getY()+slab.getHeight())
 			{
 			remove(power);
+			powerNum=0;
 			power=null;
 			}
 			}
@@ -192,6 +194,17 @@ private void checkPause()
 
 private void collision()
 {
+//Following code Checks collision of power with slab
+	if(power!=null)
+	{
+		if(power.getY()+power.getHeight()>=slab.getY() && ( (power.getX()>=slab.getX() && power.getX()+power.getWidth()<=slab.getX()+slab.getWidth()) || (power.getX()+power.getWidth()/2>=slab.getX() && power.getX()+power.getWidth()/2<=slab.getX()+slab.getWidth()) ) )
+		{
+			powerAct();
+		}
+	}
+	
+	
+// Checks collision of ball with walls	
 if(leftwall() || rightwall())
 {
 dx=-dx;	
@@ -211,6 +224,7 @@ if(bottom())
 	info.setLocation(getWidth()/2-info.getWidth()/2,getHeight()/2);
 	info.setLabel("You Loose !!!!");
 }
+
 } // Collision Check end
 
 private boolean leftwall()
@@ -236,6 +250,73 @@ private boolean bottom()
 if(ball.getY()>=getHeight())
 	return true;
 	return false;	
+}
+
+private int powerAct()
+{
+	if(powerNum>50 && powerNum<=60)
+	{
+	expandSlab();
+	}
+	else if (powerNum>60 && powerNum<=70)
+	{
+	shrinkSlab();
+	}
+	else if (powerNum>70 && powerNum<=75)
+	{
+	expandBall();
+	}	
+	else if (powerNum>75 && powerNum<=80)
+	{
+	shrinkBall();
+	}
+	else if (powerNum>80 && powerNum<=90)
+	{
+	speedInc();
+	}
+	else if (powerNum>90 && powerNum<=100)
+	{
+	speedDec();
+	}
+	
+	remove(power);
+	powerNum=0;
+	power=null;
+	
+	
+return 1;	
+}
+
+private void shrinkSlab()
+{
+if(slab.getWidth()-slab.getWidth()*.25>=ball.getWidth())
+	slab.scale(.75,1);
+}
+private void expandSlab()
+{
+if(slab.getWidth()+slab.getWidth()*.25<=getWidth())
+	slab.scale(1.25,1);
+}
+private void expandBall()
+{
+if(ball.getWidth()+ball.getWidth()*.25<=slab.getWidth())
+	ball.scale(1.25);
+}
+private void shrinkBall()
+{
+//if(ball.getWidth()-ball.getWidth()*.25>=slab.getWidth())
+	ball.scale(.75);
+}
+private void speedDec()
+{
+if(delay<40)
+	delay=delay + 5/delay;
+}
+private void speedInc()
+{
+double dt=delay/5;
+if(delay-dt>0)
+	delay=delay-dt;
 }
 
 /*Differenet cases in the method signify diffrent positions of the ball by which it can
@@ -311,21 +392,20 @@ switch (point)
 point=0;
 }//check fase ends
 
+// Creates a new power called in getPoint function with every case of facing pile object
 public int emitPower()
 {
 random=RandomGenerator.getInstance();
-int num=random.nextInt(100);
-
-if(num>10)
+powerNum=random.nextInt(100);
+//Probbablity of creating a random power is 50/100 rest specic probbablities are specified in powerAct Method according to value of powerNum
+if(powerNum>=50)
 {
-power = new GRect(50,50);
-power.setColor(Color.YELLOW);
+power = new GRect(30,30);
+power.setColor(Color.RED);
 add(power,ball.getX(),ball.getY());
-//powerPresent=true;
+return 1;
 }
-
-
-	return 1;	
+	return 0;	
 }
 
 /*Prsense of any object is check at these provided 8 points on the ball as the extreme corners 
@@ -527,7 +607,7 @@ private void postwin()
 	brick count is used to check if the game is finshed or not 
 	it is used in finish method and also in move method to display remaining bricks	*/
 	
-	int brickCount=0,level=1;
+	int brickCount=0,level=1,powerNum=0;
 	double delay=5,tbh,tbw;//tbh and tbw are not ised yet probbably use for total brick height and width
 	int upMargin=windowH/8;
 	int downMargin=windowH/8;
