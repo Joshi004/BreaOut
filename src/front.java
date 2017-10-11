@@ -45,9 +45,18 @@ if(brickCount==0)
 private void setup()
 {
 // Setting Window Size initiating info
+delay=5;
+lastDelay=5;
+powerVisible=false;
 this.setSize(windowW, windowH);
 pause(20);							// To make susre this pointer is changed for new dimensions 
-this.setBackground(Color.GREEN);
+//this.setBackground(Color.GREEN);
+background = new GImage("file:///E:/work_space/JAVA/BreakIt/images/back.jpg");
+background.setSize(getWidth(),getHeight()+70);
+background.sendToBack();
+background.setLocation(0,-70);
+add(background);
+
 
 info=new GLabel("Game BreakOut");
 add(info);
@@ -60,13 +69,14 @@ info1.setFont("Serif-50");
 info1.setLocation(0,upMargin-info.getHeight());
 
 bar=new GLine(0,getHeight()-250,getWidth(),getHeight()-250);
-
+bar.setColor(Color.gray);
 
 // Adding slab 
-slab = new G3DRect(this.getWidth()/6,this.getWidth()/80);	
+slab = new GImage("file:///E:/work_space/JAVA/BreakIt/images/slab.jpg");	
+slab.setSize(this.getWidth()/6,this.getWidth()/80);
 add(slab,25,getHeight()-downMargin);
-slab.setFillColor(Color.blue);
-slab.setFilled(true);
+//slab.setFillColor(Color.blue);
+//slab.setFilled(true);
 
 
 
@@ -74,7 +84,10 @@ slab.setFilled(true);
 addMouseListeners();
 
 // Setting up ball
+
 ball=new GOval(getHeight()/24,getHeight()/24);
+//ball=new GImage("file:///E:/work_space/JAVA/BreakIt/images/ball.png");
+//ball.setSize(getHeight()/24,getHeight()/24);
 ball.setFilled(true);
 ball.setFillColor(Color.red);
 add(ball,slab.getX()+slab.getWidth()/2,slab.getY()-ball.getHeight());
@@ -119,7 +132,7 @@ if (event.getY()<slab.getY()+slab.getHeight() && event.getY()>info.getY()+info.g
 gamePaused=false;
 remove(info1);
 remove (bar);
-delay=5;
+delay=lastDelay;
 }
 
 if(event.getX()>=0 && event.getX()<=getWidth()-slab.getWidth() && gamePaused==false)
@@ -153,12 +166,12 @@ if(!gameOver)
 	{
 //Code to move ball
 ball.move(dx,dy); // dx & dy were set to 1 in mouse clicked event
-info.setLabel("Remaining Bricks : "+brickCount+"   Pointer Position"+ event.getXOnScreen()+" , "+event.getY() );
+info.setLabel("Remaining Bricks : "+brickCount+ " Delay :"+delay + " PowerNum :" +powerNum );
 
 // Code To move Power
 	if(power!=null)
 	{
-		power.move(0, .5);
+		power.move(0,.5);
 			
 			if(power.getY()>slab.getY()+slab.getHeight())
 			{
@@ -179,12 +192,13 @@ info.setLabel("Remaining Bricks : "+brickCount+"   Pointer Position"+ event.getX
 
 private void checkPause()
 {
-	if(fly)
+	if(fly && !gamePaused)
 	{
 		if( (event.getY()>=slab.getY() + slab.getHeight() || event.getY() <= info.getY()+info.getDescent()) && ball.getY() > bar.getY()+2)// 2 is for margin of safety as it may cling to th bar otherwise
 		{
 			gamePaused=true;
 			add(info1);
+			lastDelay=delay;
 			delay=100;
 			add(bar);
 		}
@@ -254,31 +268,37 @@ if(ball.getY()>=getHeight())
 
 private int powerAct()
 {
-	if(powerNum>50 && powerNum<=60)
+
+	switch (powerNum)
 	{
-	expandSlab();
-	}
-	else if (powerNum>60 && powerNum<=70)
-	{
-	shrinkSlab();
-	}
-	else if (powerNum>70 && powerNum<=75)
-	{
-	expandBall();
-	}	
-	else if (powerNum>75 && powerNum<=80)
-	{
-	shrinkBall();
-	}
-	else if (powerNum>80 && powerNum<=90)
-	{
-	speedInc();
-	}
-	else if (powerNum>90 && powerNum<=100)
-	{
-	speedDec();
-	}
+	case 1:
+		expandSlab();
+		break;
+	case 2:
+		shrinkSlab();
+		break;
 	
+	case 3:
+		expandBall();
+		break;
+
+	case 4:
+		shrinkBall();
+		break;
+
+	case 5:
+		speedInc();
+		break;
+
+	case 6:
+		speedDec();
+		break;
+
+	case 7:
+		powerVisible=true;
+		break;
+}
+
 	remove(power);
 	powerNum=0;
 	power=null;
@@ -395,14 +415,62 @@ point=0;
 // Creates a new power called in getPoint function with every case of facing pile object
 public int emitPower()
 {
+double num;
+int section=7;
+num=probab*100;
 random=RandomGenerator.getInstance();
-powerNum=random.nextInt(100);
-//Probbablity of creating a random power is 50/100 rest specic probbablities are specified in powerAct Method according to value of powerNum
-if(powerNum>=50)
+int powerVal=random.nextInt(100);
+//Probbablity of creating a random power is num/100 rest specic probbablities are specified in powerAct Method according to value of powerNum
+if(powerVal<=num)
 {
-power = new GRect(30,30);
-power.setColor(Color.RED);
+
+power = new GImage("file:///E:/work_space/JAVA/BreakIt/images/5.png");
+
+for(int i=0;i<section;i++)
+{
+if(powerVal>section*i && powerVal<=section*(i+1))	
+powerNum=i+1;
+}
+
+
+if(powerVisible || powerNum==7)
+{
+	switch(powerNum)
+	{
+	case 1:
+		remove(power);
+		power = new GImage("file:///E:/work_space/JAVA/BreakIt/images/expandSlab.png"); 
+		break;	
+	case 2:
+		remove(power);
+		power = new GImage("file:///E:/work_space/JAVA/BreakIt/images/shrinkSlab.png"); 
+		break;
+	case 3:
+		remove(power);
+		power = new GImage("file:///E:/work_space/JAVA/BreakIt/images/expandBall.png"); 
+		break;
+	case 4:
+		remove(power);
+		power = new GImage("file:///E:/work_space/JAVA/BreakIt/images/shrinkBall.png"); 
+		break;
+	case 5:
+		remove(power);
+		power = new GImage("file:///E:/work_space/JAVA/BreakIt/images/plus.png"); 
+		break;
+	case 6:
+		remove(power);
+		power = new GImage("file:///E:/work_space/JAVA/BreakIt/images/minus.png"); 
+		break;
+	case 7:
+		remove(power);
+		power = new GImage("file:///E:/work_space/JAVA/BreakIt/images/unBox.png"); 
+		break;
+
+}
+}
+power.setSize(50,50);
 add(power,ball.getX(),ball.getY());
+
 return 1;
 }
 	return 0;	
@@ -464,7 +532,7 @@ if(getElementAt(point12X,point12Y)!=null )
 			emitPower();
 
 	}
-	if(obj!=power)
+	if(obj!=power && obj!=background)
 		return 12;
 }
 
@@ -478,7 +546,7 @@ if(getElementAt(point3X,point3Y)!=null)
 		if(power==null)
 			emitPower();
 	}
-	if(obj!=power)	
+	if(obj!=power && obj!=background)	
 	return 3;
 }
 
@@ -492,7 +560,7 @@ if(getElementAt(point6X,point6Y)!=null)
 		if(power==null)
 			emitPower();
 	}
-	if(obj!=power)	
+	if(obj!=power && obj!=background)	
 	return 6;
 }
 
@@ -506,7 +574,7 @@ if(getElementAt(point9X,point9Y)!=null)
 		if(power==null)
 			emitPower();
 	}
-	if(obj!=power)	
+	if(obj!=power && obj!=background)	
 	return 9;
 }
 
@@ -520,7 +588,7 @@ if(getElementAt(point1X,point1Y)!=null)
 		if(power==null)
 			emitPower();
 	}
-	if(obj!=power)	
+	if(obj!=power && obj!=background)	
 	return 1;
 }
 
@@ -534,7 +602,7 @@ if(getElementAt(point4X,point4Y)!=null)
 		if(power==null)
 			emitPower();
 	}
-	if(obj!=power)	
+	if(obj!=power && obj!=background)	
 	return 4;
 }
 
@@ -548,7 +616,7 @@ if(getElementAt(point7X,point7Y)!=null)
 		if(power==null)
 			emitPower();
 	}
-	if(obj!=power)	
+	if(obj!=power && obj!=background)	
 	return 7;
 }
 
@@ -562,7 +630,7 @@ if(getElementAt(point10X,point10Y)!=null)
 		if(power==null)
 			emitPower();
 	}
-	if(obj!=power)	
+	if(obj!=power && obj!=background)	
 	return 10;
 }
 
@@ -595,7 +663,7 @@ private void postwin()
 
 
 //Declaration of class variables
-	GRect brick,slab;    					
+	GRect brick;    					
 	GOval ball;
 	int windowW=1400,windowH=660,iww,iwh;
 	double brickH,brickW,dx=0,dy=0;
@@ -608,16 +676,17 @@ private void postwin()
 	it is used in finish method and also in move method to display remaining bricks	*/
 	
 	int brickCount=0,level=1,powerNum=0;
-	double delay=5,tbh,tbw;//tbh and tbw are not ised yet probbably use for total brick height and width
+	double delay=5,lastDelay=5,probab=.5;// Probab is the probablity of power occourence manupulated in emitPower Method
 	int upMargin=windowH/8;
 	int downMargin=windowH/8;
-	boolean gameOver=false,fly=false,gamePaused=false,powerPresent=false;
+	boolean gameOver=false,fly=false,gamePaused=false,powerPresent=false,powerVisible=false;
 	RandomGenerator random;
 	/*fly is initaly set to false hat means ball is not flying as the user clicks mouse button
 	fly is set to true and also dx & dy are set to 1 Object obj is used in facecheck method in collision method
 	to check if the curent object is brick or not*/
 	Bricks pile;
-	GObject obj,power=null;
+	GObject obj;
+	GImage power,background,slab;
 	GLabel info,info1;
 	GLine bar,topBar;
 	MouseEvent event;
