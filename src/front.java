@@ -86,8 +86,6 @@ addMouseListeners();
 // Setting up ball
 
 ball=new GOval(getHeight()/24,getHeight()/24);
-//ball=new GImage("file:///E:/work_space/JAVA/BreakIt/images/ball.png");
-//ball.setSize(getHeight()/24,getHeight()/24);
 ball.setFilled(true);
 ball.setFillColor(Color.red);
 add(ball,slab.getX()+slab.getWidth()/2,slab.getY()-ball.getHeight());
@@ -166,7 +164,7 @@ if(!gameOver)
 	{
 //Code to move ball
 ball.move(dx,dy); // dx & dy were set to 1 in mouse clicked event
-info.setLabel("Remaining Bricks : "+brickCount+ " Delay :"+delay + " PowerNum :" +powerNum );
+info.setLabel("Remaining Bricks : "+brickCount);//+ " Delay :"+delay + " PowerNum :" +powerNum );
 
 // Code To move Power
 	if(power!=null)
